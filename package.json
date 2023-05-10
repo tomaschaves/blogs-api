@@ -27,8 +27,8 @@
     "pretest": "(npm run kill:test && NODE_ENV=test npm run start:test) &",
     "test": "npx -y wait-on -t 300000 http://localhost:3030 && NODE_ENV=test API_PORT=3030 jest -i --verbose --forceExit",
     "test:dev": "npx -y wait-on -t 300000 http://localhost:3001 && NODE_ENV=development API_PORT=3001 jest -i --verbose --forceExit",
-    "posttest": "npm run kill:test",
     "test-coverage": "jest -i --verbose --forceExit --coverage",
+    "posttest": "npm run kill:test",
     "predev": "npx sequelize-cli db:create && npx sequelize-cli db:migrate",
     "dev": "nodemon .",
     "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json ."
