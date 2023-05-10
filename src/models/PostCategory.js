@@ -6,19 +6,27 @@
 module.exports = (sequelize, DataTypes) => {
   const PostCategory = sequelize.define(
     'PostCategory', {
-      post_id: DataTypes.INTEGER,
-      category_id: DataTypes.INTEGER,
+      postId: DataTypes.INTEGER,
+      categoryId: DataTypes.INTEGER,
   }, {
       timestamps: false,
       tableName: 'users',
+      underscored: true,
     });
 
     PostCategory.associate = ({ BlogPost, Category }) => {
-      BlogPost.belongsToMany(Category, {
-        foreignKey: 'post_id',
+      BlogPost.belongsToMany(Category, { // o blogpost passa por meio da postcategory para se relacionar ao category. a FK chega no postcategory e pergunta 'quem eu sou?' e o próprio PostCategory diz 'você se chama 'postId'
+        foreignKey: 'postId',
+        through: PostCategory,
+        as: 'Categories',
+        // já a otherKey, 
+        otherKey: 'categoryId',
       });
-      Category.belongsToMany(BlogPost, {
-        foreignKey: 'category_id',
+      Category.belongsToMany(BlogPost, { // mesma coisa, só que invertido
+        foreignKey: 'categoryId',
+        through: PostCategory,
+        as: 'Posts',
+        otherKey: 'postId',
       });
     };
   
