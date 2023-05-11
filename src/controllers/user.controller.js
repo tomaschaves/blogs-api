@@ -3,7 +3,7 @@ const userService = require('../services/user.service');
 
 const postUser = async (req, res) => {
   const { displayName, email, password, image } = req.body;   
-  await userService.postUser(displayName, email, password, image);
+  userService.postUser(displayName, email, password, image);
   
   const token = createToken({ email });
   
@@ -15,4 +15,13 @@ const getAllUsers = async (req, res) => {
   return res.status(200).json(allUsers);
 };
 
-module.exports = { postUser, getAllUsers };
+const getUser = async (req, res) => {
+  const { id } = req.params;
+  const user = await userService.getUser(id);
+  if (!user) {
+    return res.status(404).json({ message: 'User does not exist' });
+  }
+  return res.status(200).json(user);
+};
+
+module.exports = { postUser, getAllUsers, getUser };
