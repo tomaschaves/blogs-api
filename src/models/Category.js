@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       name: DataTypes.STRING,
   }, {
       timestamps: false,
-      tableName: 'category',
+      tableName: 'categories',
     });
   return Category;
 };

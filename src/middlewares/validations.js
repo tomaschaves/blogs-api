@@ -60,4 +60,21 @@ const checkToken = (req, res, next) => {
   }
 };
 
-module.exports = { checkLogin, checkLength, checkEmail, checkExistence, checkToken };
+const checkCategoryNameLength = async (req, res, next) => {
+  const { name } = req.body;
+  
+  if (name.length === 0 || name === undefined) {
+    return res.status(400)
+      .json({ message: '"name" is required' });
+  }
+  
+  return next();
+};
+
+module.exports = { checkLogin,
+  checkLength,
+  checkEmail,
+  checkExistence,
+  checkToken,
+  checkCategoryNameLength,
+};

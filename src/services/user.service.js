@@ -1,7 +1,7 @@
 const { User } = require('../models');
 
 const postUser = (displayName, email, password, image) => {
-    User.create({ displayName, email, password, image });
+  User.create({ displayName, email, password, image });
 };
 
 const getAllUsers = async () => {
