@@ -1,3 +1,5 @@
+const { User } = require('../models');
+
 const checkLogin = (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password || email.length === 0 || password.length === 0) {
@@ -7,41 +9,42 @@ const checkLogin = (req, res, next) => {
   return next();
 };
 
-// const checkDisplayName = async (req, res, next) => {
-//   const sales = req.body;
-//   const hasntProductID = sales
-//   .some(({ productId }) => productId === undefined || productId.length === 0); // se true, deu erro
-//   if (hasntProductID) {
-//     return res.status(400).json({ message: '"productId" is required' });
-//   }
-//   return next();
-// };
-
-// const checkEmail = async (req, res, next) => {
-//   const sales = req.body;
-//   const hasntProductID = sales
-//   .some(({ productId }) => productId === undefined || productId.length === 0); // se true, deu erro
-//   if (hasntProductID) {
-//     return res.status(400).json({ message: '"productId" is required' });
-//   }
-//   return next();
-// };
-
-// const checkExistence = async (req, res, next) => {
-//   const sales = req.body;
-//   // const checkUserName = (/*colocar aqui o parâmetro do username*/) => User.findOne({ where: { username } });
+const checkLength = async (req, res, next) => {
+  const { displayName, password } = req.body;
   
-//   const validIds = await modelSales.checkValidIds();
-//   const validIdsNumber = validIds.map((id) => Number(id));
-
-//   const hasProductIdInexistent = sales
-//     .every(({ productId }) => validIdsNumber.includes(productId)); // se true, deu certo
+  if (displayName.length < 8 || !displayName) {
+    return res.status(400)
+      .json({ message: '"displayName" length must be at least 8 characters long' });
+  }
   
-//   if (!hasProductIdInexistent) {
-//     return res.status(404).json({ message: 'Product not found' });
-//   }
+  if (password.length < 6 || !password) {
+    return res.status(400)
+      .json({ message: '"password" length must be at least 6 characters long' });
+  }
 
-//   return next();
-// };
+  return next();
+};
 
-module.exports = { checkLogin };
+const checkEmail = (req, res, next) => {
+  const { email } = req.body;
+  const regexEmail = /\S+@\S+\.\S+/;
+  const validateEmailRegex = regexEmail.test(email);
+
+  if (email === undefined || !validateEmailRegex) {
+    return res.status(400).json({ message: '"email" must be a valid email' });
+  }
+
+  return next();
+};
+
+const checkExistence = async (req, res, next) => {
+  const { email } = req.body;
+  const user = await User.findOne({ where: { email } });
+
+  if (user !== null) {
+    return res.status(409).json({ message: 'User already registered' });
+  }
+  return next();
+};
+
+module.exports = { checkLogin, checkLength, checkEmail, checkExistence };

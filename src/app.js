@@ -1,5 +1,6 @@
 const express = require('express');
 const loginRouter = require('./routes/login.router');
+const userRouter = require('./routes/user.router');
 // const salesRouter = require('./routers/sales.router');
 // ...
 
@@ -12,7 +13,7 @@ app.get('/', (_request, response) => {
 });
 
 app.use('/login', loginRouter);
-// app.use('/sales', salesRouter);
+app.use('/user', userRouter);
 
 // ...
 
