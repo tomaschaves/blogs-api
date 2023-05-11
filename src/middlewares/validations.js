@@ -27,8 +27,6 @@ const checkLogin = (req, res, next) => {
 //   return next();
 // };
 
-
-
 // const checkExistence = async (req, res, next) => {
 //   const sales = req.body;
 //   // const checkUserName = (/*colocar aqui o parâmetro do username*/) => User.findOne({ where: { username } });
