@@ -6,7 +6,11 @@
 module.exports = (sequelize, DataTypes) => {
   const BlogPost = sequelize.define(
     'BlogPost', {
-      id: DataTypes.INTEGER,
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
       title: DataTypes.STRING,
       content: DataTypes.STRING,
       userId: DataTypes.STRING,
@@ -14,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       updated: DataTypes.STRING,
   }, {
       timestamps: false,
-      tableName: 'blog_posts',
+      tableName: 'blog_posts', // temos que colocar o nome da tabela em camelCase?
       underscored: true,
     });
 
