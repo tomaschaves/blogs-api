@@ -1,4 +1,5 @@
 const { User } = require('../models');
+const { verifyToken } = require('../auth/authorizationFunction');
 
 const checkLogin = (req, res, next) => {
   const { email, password } = req.body;
@@ -47,4 +48,16 @@ const checkExistence = async (req, res, next) => {
   return next();
 };
 
-module.exports = { checkLogin, checkLength, checkEmail, checkExistence };
+const checkToken = (req, res, next) => {
+  const { authorization: token } = req.headers;
+  if (!token) return res.status(401).json({ message: 'Token not found' });
+
+  try {
+    verifyToken(token);
+    return next();
+  } catch (error) {
+    return res.status(401).json({ message: 'Expired or invalid token' });
+  }
+};
+
+module.exports = { checkLogin, checkLength, checkEmail, checkExistence, checkToken };
