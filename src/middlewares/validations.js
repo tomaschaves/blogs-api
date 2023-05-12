@@ -1,4 +1,5 @@
 const { User } = require('../models');
+const { Category } = require('../models');
 const { verifyToken } = require('../auth/authorizationFunction');
 
 const checkLogin = (req, res, next) => {
@@ -53,7 +54,8 @@ const checkToken = (req, res, next) => {
   if (!token) return res.status(401).json({ message: 'Token not found' });
 
   try {
-    verifyToken(token);
+    const user = verifyToken(token);
+    req.user = user;
     return next();
   } catch (error) {
     return res.status(401).json({ message: 'Expired or invalid token' });
@@ -71,10 +73,42 @@ const checkCategoryNameLength = async (req, res, next) => {
   return next();
 };
 
+const checkCategoryFields = (req, res, next) => {
+  const { title, content, categoryIds } = req.body;
+  const fields = [];
+  fields.push(title, content, categoryIds);
+  const fieldsUndefined = fields.every((field) => field !== undefined || field);
+  if (!(fieldsUndefined)) {
+    return res.status(400).json({ message: 'Some required fields are missing' });
+  }
+  const fieldsLengthZero = fields.every((field) => field.length !== 0);
+
+  if (!(fieldsLengthZero)) {
+    return res.status(400).json({ message: 'Some required fields are missing' });
+  }
+
+  return next();
+};
+
+const checkCategoryIds = async (req, res, next) => {
+  const { categoryIds } = req.body;
+  const responseFromDB = await Category.findAll({ attributes: { exclude: ['name'] } });
+  const allCategoriesFromDB = responseFromDB.map((category) => category.dataValues.id);
+  const equalCategories = categoryIds.every((category) => allCategoriesFromDB.includes(category));
+
+  if (!equalCategories) {
+    return res.status(400).json({ message: 'one or more "categoryIds" not found' });
+  }
+
+  return next();
+};
+
 module.exports = { checkLogin,
   checkLength,
   checkEmail,
   checkExistence,
   checkToken,
   checkCategoryNameLength,
+  checkCategoryFields,
+  checkCategoryIds,
 };
