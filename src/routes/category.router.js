@@ -4,7 +4,7 @@ const { checkToken, checkCategoryNameLength } = require('../middlewares/validati
 
 const categoryRouter = express.Router();
 categoryRouter.post('/', checkToken, checkCategoryNameLength, categoryController.postCategory);
-// userRouter.get('/', checkToken, userController.getAllUsers);
+categoryRouter.get('/', checkToken, categoryController.getAllCategories);
 // userRouter.get('/:id', checkToken, userController.getUser);
 
 module.exports = categoryRouter;

@@ -63,7 +63,7 @@ const checkToken = (req, res, next) => {
 const checkCategoryNameLength = async (req, res, next) => {
   const { name } = req.body;
   
-  if (name.length === 0 || name === undefined) {
+  if (name === undefined || name.length === 0) {
     return res.status(400)
       .json({ message: '"name" is required' });
   }
